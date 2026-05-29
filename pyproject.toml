@@ -1,0 +1,51 @@
+[project]
+name = "boas-praticas-fastapi"
+version = "0.1.0"
+description = "Curso de fastapi para aprimorar boas práticas"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.136.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.15",
+    "taskipy>=1.14.1",
+    "typos>=1.46.3",
+]
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+preview = true
+select = ["I", "F", "E", "W", "PL", "PT"]
+
+[tool.ruff.format]
+preview = true
+quote-style = "double"
+
+[tool.pytest]
+pythonpath = ["."]
+addopts = ["-p", "no:warnings"]
+
+
+[tool.typos.files]
+extend-exclude = ["*.md"]
+
+[tool.coverage.html]
+directory = "tests/htmlcov"
+
+[tool.taskipy.tasks]
+pre_lint = "typos"
+lint = "ruff check"
+pre_format = "ruff check --fix"
+format = "ruff format"
+run = "fastapi dev api/app.py"
+pre_test = "task lint"
+test = "pytest -s -x --cov=api -vv"
+post_test = "coverage html"
